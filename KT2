@@ -1,0 +1,140 @@
+1 file: notebook.xsd
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+     <xs:simpleType name="PhoneTypeAttribute">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="work"/>
+            <xs:enumeration value="home"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="PhoneValueType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{3}-\d{2}-\d{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="PhoneType">
+        <xs:simpleContent>
+            <xs:extension base="PhoneValueType">
+                <xs:attribute name="type" type="PhoneTypeAttribute" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="PhonesType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="phone" type="PhoneType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OfficeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="code" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="OfficesType">
+        <xs:sequence>
+            <xs:element name="office" type="OfficeType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="NameType">
+        <xs:sequence>
+            <xs:element name="first" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AddressType">
+        <xs:all>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="street" type="xs:string"/>
+            <xs:element name="index" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="PersonType">
+        <xs:sequence>
+            <xs:element name="name" type="NameType"/>
+            <xs:element name="address" type="AddressType"/>
+            <xs:element name="phones" type="PhonesType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="office" type="xs:string" use="required"/>
+    </xs:complexType>
+  
+    <xs:element name="notebook">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="offices" type="OfficesType"/>
+                <xs:element name="person" type="PersonType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <xs:unique name="uniquePersonId">
+            <xs:selector xpath="person"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+
+        <xs:unique name="uniqueOfficeCode">
+            <xs:selector xpath="offices/office"/>
+            <xs:field xpath="@code"/>
+        </xs:unique>
+
+        <xs:keyref name="officeRef" refer="uniqueOfficeCode">
+            <xs:selector xpath="person"/>
+            <xs:field xpath="@office"/>
+        </xs:keyref>
+    </xs:element>
+</xs:schema>
+
+
+
+
+
+2 file: notebook.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<notebook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="./notebook.xsd">
+
+    <offices>
+        <office code="001">Главный офис</office>
+        <office code="002">Другой корпус</office>
+    </offices>
+
+    <person id="P001" office="001">
+        <name>
+            <first>Иван</first>
+            <surname>Петров</surname>
+        </name>
+        <address>
+            <index>101000</index>
+            <city>Москва</city>
+            <street>Тверская, 15</street>
+        </address>
+        <phones>
+            <phone>123-45-67</phone>
+        </phones>
+    </person>
+    
+    <person id="P002" office="002">
+        <name>
+            <first>Елена</first>
+            <surname>Сидорова</surname>
+        </name>
+        <address>
+            <index>198099</index>
+            <city>Санкт-Петербург</city>
+            <street>Невский проспект, 28</street>
+        </address>
+        <phones>
+            <phone>987-65-43</phone>
+        </phones>
+    </person>
+</notebook>
