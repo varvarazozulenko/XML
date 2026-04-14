@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-    <xsl:key name="elementsKey" match="element" use="@name" />
-
     <xsl:template match="/">
         <html>
             <head>
@@ -59,7 +57,7 @@
                             
                             <td>
                                 <xsl:value-of select="@value"/>
-                                <xsl:if test="key('elementsKey', 'Принтер') and @name='Принтер'">
+                                <xsl:if test="@name='Принтер'">
                                 </xsl:if>
                             </td>
                         </tr>
