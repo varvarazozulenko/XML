@@ -1,0 +1,118 @@
+doc.xml:
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="doc.xsl" ?>
+<timeTable>
+ <offices>
+   <office code="КУ">
+       <name>Курская</name>
+       <address>Костомаровский пер., дом 3, стр 4, Москва, 105120</address>
+   </office>
+   <office code="ВТ">
+       <name>ВДНХ Техноград</name>
+       <address>пр-т Мира, 119 строение 63, Москва, 129223</address>
+   </office>
+ </offices>
+ <lessons>
+   <lesson no="1" complex="КУ">
+     <thema>Обзор XML технологий</thema>
+     <date>2021-01-19</date>
+     <time>10:00</time>    
+   </lesson>
+   <lesson no="2" complex="ВТ">
+     <thema>Введение в XML</thema>
+     <date>2021-01-23</date>
+     <time>17:20</time>
+   </lesson>
+   <lesson no="3" complex="ВТ">
+     <thema>Правила XML</thema>
+     <date>2021-01-26</date>
+     <time>15:30</time>    
+   </lesson>
+   <lesson no="4" complex="КУ">
+     <thema>Пространства имён XML</thema>
+     <date>2021-01-29</date>
+     <time>10:00</time>    
+   </lesson>  
+   <lesson no="5" complex="ВТ">
+     <thema>DTD: Описание структуры документа</thema>
+     <date>2021-02-03</date>
+     <time>17:20</time>    
+   </lesson>  
+   <lesson no="6" complex="ВТ">
+     <thema>DTD: определение сущностей</thema>
+     <date>2021-02-08</date>
+     <time>15:30</time>    
+   </lesson>  
+   <lesson no="7" complex="КУ">
+     <thema>Введение в XML Схемы</thema>
+     <date>2021-02-12</date>
+     <time>10:00</time>    
+   </lesson>  
+   <lesson no="8" complex="ВТ">
+     <thema>XML Схема: типы данных</thema>
+     <date>2021-02-17</date>
+     <time>17:20</time>    
+   </lesson>  
+   <lesson no="9" complex="ВТ">
+     <thema>Атрибуты типов</thema>
+     <date>2021-02-21</date>
+     <time>15:30</time>    
+   </lesson>  
+   <lesson no="10" complex="КУ">
+     <thema>XML Схема: Расширение сложных типов</thema>
+     <date>2021-02-25</date>
+     <time>10:00</time>    
+   </lesson>  
+ </lessons>
+</timeTable>
+
+
+
+
+
+
+doc.xsl:
+
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/">
+        <html>
+            <p>Комплекс Курская: всего занятий 
+                <xsl:value-of select="count (//lesson[@complex='КУ'])"/>
+            </p>
+            <p>Комплекс ВДНХ: всего занятий
+                <xsl:value-of select="count (//lesson[@complex='ВТ'])"/>
+            </p>
+            <p>Занятий в 10:00
+                <xsl:value-of select="count (//lesson[time='10:00'])"/>
+            </p>
+            <p>Занятий в 15:30
+                <xsl:value-of select="count (//lesson[time='15:30'])"/>
+            </p>
+            <p>Занятий в 17:20
+                <xsl:value-of select="count (//lesson[time='17:20'])"/>
+            </p>
+              <p>Первое занятие: 
+                <xsl:value-of select="//lesson[1]/thema"/>
+                состоялось 
+                <xsl:value-of select="//lesson[1]/date"/>
+            </p>
+             <p>Последнее занятие: 
+                <xsl:value-of select="//lesson[last()]/thema"/>
+                состоялось
+                <xsl:value-of select="//lesson[last()]/date"/>
+            </p>
+            <p>Занятий по DTD: 
+                <xsl:value-of select="count(//lesson[contains(thema, 'DTD')])"/>
+            </p>
+            <p>Чётных занятий на Курской: 
+                <xsl:value-of select="count(//lesson[@complex='КУ' and number(@no) mod 2 = 0])"/>
+            </p>
+            <p>Нечётных занятий на ВДНХ:
+                 <xsl:value-of select="count(//lesson[@complex='ВТ' and number(@no) mod 2 = 1])"/>
+            </p>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>
